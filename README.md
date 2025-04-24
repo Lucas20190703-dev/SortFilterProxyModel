@@ -3,6 +3,11 @@ SortFilterProxyModel
 
 SortFilterProxyModel is an implementation of `QSortFilterProxyModel` conveniently exposed for QML.
 
+##### Updates
+- CMake for Qt6
+- add RegularExpressionFilter instead of RegExpFilter
+- QVariant::compare instead of operator < >
+  
 Install
 -------
 ##### With [qpm](https://qpm.io) :
