@@ -130,9 +130,9 @@ bool RangeFilter::filterRow(const QModelIndex& sourceIndex, const QQmlSortFilter
 {
     QVariant value = sourceData(sourceIndex, proxyModel);
     bool lessThanMin = m_minimumValue.isValid() &&
-            (m_minimumInclusive ? value < m_minimumValue : value <= m_minimumValue);
+            (m_minimumInclusive ? QVariant::compare(value, m_minimumValue) == QPartialOrdering::Less : QVariant::compare(value, m_minimumValue) == QPartialOrdering::Less);
     bool moreThanMax = m_maximumValue.isValid() &&
-            (m_maximumInclusive ? value > m_maximumValue : value >= m_maximumValue);
+            (m_maximumInclusive ? QVariant::compare(value, m_maximumValue) != QPartialOrdering::Less : QVariant::compare(value, m_maximumValue) != QPartialOrdering::Less);
     return !(lessThanMin || moreThanMax);
 }
 

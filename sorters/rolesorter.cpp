@@ -59,11 +59,20 @@ int RoleSorter::compare(const QModelIndex &sourceLeft, const QModelIndex& source
     QPair<QVariant, QVariant> pair = sourceData(sourceLeft, sourceRight, proxyModel);
     QVariant leftValue = pair.first;
     QVariant rightValue = pair.second;
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     if (leftValue < rightValue)
         return -1;
     if (leftValue > rightValue)
         return 1;
     return 0;
+#else
+    if (QVariant::compare(leftValue, rightValue) == QPartialOrdering::Less)
+        return -1;
+    if (QVariant::compare(leftValue, rightValue) == QPartialOrdering::Greater)
+        return 1;
+    return 0;
+#endif
 }
 
 }

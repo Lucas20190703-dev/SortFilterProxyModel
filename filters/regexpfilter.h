@@ -3,6 +3,7 @@
 
 #include "rolefilter.h"
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 namespace qqsfpm {
 
 class RegExpFilter : public RoleFilter {
@@ -48,5 +49,6 @@ private:
 };
 
 }
+#endif
 
 #endif // REGEXPFILTER_H

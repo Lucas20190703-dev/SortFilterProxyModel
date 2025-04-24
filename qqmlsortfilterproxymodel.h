@@ -26,7 +26,12 @@ class QQmlSortFilterProxyModel : public QSortFilterProxyModel,
 
     Q_PROPERTY(QString filterRoleName READ filterRoleName WRITE setFilterRoleName NOTIFY filterRoleNameChanged)
     Q_PROPERTY(QString filterPattern READ filterPattern WRITE setFilterPattern NOTIFY filterPatternChanged)
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Q_PROPERTY(PatternSyntax filterPatternSyntax READ filterPatternSyntax WRITE setFilterPatternSyntax NOTIFY filterPatternSyntaxChanged)
+#else
+    Q_PROPERTY(int filterPatternOptions READ filterPatternOptions WRITE setFilterPatternOptions NOTIFY filterPatternOptionsChanged)
+#endif
     Q_PROPERTY(QVariant filterValue READ filterValue WRITE setFilterValue NOTIFY filterValueChanged)
 
     Q_PROPERTY(QString sortRoleName READ sortRoleName WRITE setSortRoleName NOTIFY sortRoleNameChanged)
@@ -37,6 +42,7 @@ class QQmlSortFilterProxyModel : public QSortFilterProxyModel,
     Q_PROPERTY(QQmlListProperty<qqsfpm::ProxyRole> proxyRoles READ proxyRolesListProperty)
 
 public:
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     enum PatternSyntax {
         RegExp = QRegExp::RegExp,
         Wildcard = QRegExp::Wildcard,
@@ -45,7 +51,19 @@ public:
         WildcardUnix = QRegExp::WildcardUnix,
         W3CXmlSchema11 = QRegExp::W3CXmlSchema11 };
     Q_ENUMS(PatternSyntax)
-
+#else
+    enum class PatternOption {
+        NoPatternOption = QRegularExpression::NoPatternOption,
+        CaseSensitiveOption = QRegularExpression::CaseInsensitiveOption,
+        DotMatchesEverythingOption = QRegularExpression::DotMatchesEverythingOption,
+        MultilineOption = QRegularExpression::MultilineOption,
+        ExtendedPatternSyntaxOption = QRegularExpression::ExtendedPatternSyntaxOption,
+        InvertedGreedinessOption = QRegularExpression::InvertedGreedinessOption,
+        DontCaptureOption = QRegularExpression::DontCaptureOption,
+        UseUnicodePropertiesOption = QRegularExpression::UseUnicodePropertiesOption
+    };
+    Q_ENUMS(PatternOption)
+#endif
     QQmlSortFilterProxyModel(QObject* parent = 0);
 
     int count() const;
@@ -59,9 +77,13 @@ public:
     QString filterPattern() const;
     void setFilterPattern(const QString& filterPattern);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0) 
     PatternSyntax filterPatternSyntax() const;
     void setFilterPatternSyntax(PatternSyntax patternSyntax);
-
+#else
+    int filterPatternOptions() const;
+    void setFilterPatternOptions(int patternOptions);
+#endif
     const QVariant& filterValue() const;
     void setFilterValue(const QVariant& filterValue);
 
@@ -97,7 +119,12 @@ Q_SIGNALS:
     void delayedChanged();
 
     void filterRoleNameChanged();
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0) 
     void filterPatternSyntaxChanged();
+#else
+    void filterPatternOptionsChanged();
+#endif
     void filterPatternChanged();
     void filterValueChanged();
 

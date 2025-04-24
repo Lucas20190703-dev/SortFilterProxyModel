@@ -92,20 +92,33 @@ void QQmlSortFilterProxyModel::setFilterRoleName(const QString& filterRoleName)
 
 QString QQmlSortFilterProxyModel::filterPattern() const
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0) 
     return filterRegExp().pattern();
+#else
+    return filterRegularExpression().pattern();
+#endif
 }
 
 void QQmlSortFilterProxyModel::setFilterPattern(const QString& filterPattern)
 {
-    QRegExp regExp = filterRegExp();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0) 
     if (regExp.pattern() == filterPattern)
         return;
 
     regExp.setPattern(filterPattern);
     QSortFilterProxyModel::setFilterRegExp(regExp);
     Q_EMIT filterPatternChanged();
-}
+#else
+    QRegularExpression regExp = filterRegularExpression();
+    if (regExp.pattern() == filterPattern)
+        return;
 
+    regExp.setPattern(filterPattern);
+    QSortFilterProxyModel::setFilterRegularExpression(regExp);
+    Q_EMIT filterPatternChanged();
+#endif
+}
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0) 
 QQmlSortFilterProxyModel::PatternSyntax QQmlSortFilterProxyModel::filterPatternSyntax() const
 {
     return static_cast<PatternSyntax>(filterRegExp().patternSyntax());
@@ -122,6 +135,25 @@ void QQmlSortFilterProxyModel::setFilterPatternSyntax(QQmlSortFilterProxyModel::
     QSortFilterProxyModel::setFilterRegExp(regExp);
     Q_EMIT filterPatternSyntaxChanged();
 }
+
+#else
+int QQmlSortFilterProxyModel::filterPatternOptions() const
+{
+    return static_cast<int>(filterRegularExpression().patternOptions());
+}
+
+void QQmlSortFilterProxyModel::setFilterPatternOptions(int patternOptions)
+{
+    QRegularExpression regExp = filterRegularExpression();
+    QRegularExpression::PatternOptions patternOptionsTmp = static_cast<QRegularExpression::PatternOptions>(patternOptions);
+    if (regExp.patternOptions() == patternOptionsTmp)
+        return;
+
+    regExp.setPatternOptions(patternOptionsTmp);
+    QSortFilterProxyModel::setFilterRegularExpression(regExp);
+    Q_EMIT filterPatternOptionsChanged();
+}
+#endif
 
 const QVariant& QQmlSortFilterProxyModel::filterValue() const
 {

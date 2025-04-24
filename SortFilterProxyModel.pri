@@ -8,7 +8,7 @@ HEADERS += $$PWD/qqmlsortfilterproxymodel.h \
     $$PWD/filters/rolefilter.h \
     $$PWD/filters/valuefilter.h \
     $$PWD/filters/indexfilter.h \
-    $$PWD/filters/regexpfilter.h \
+    
     $$PWD/filters/rangefilter.h \
     $$PWD/filters/expressionfilter.h \
     $$PWD/filters/filtercontainerfilter.h \
@@ -35,7 +35,7 @@ SOURCES += $$PWD/qqmlsortfilterproxymodel.cpp \
     $$PWD/filters/rolefilter.cpp \
     $$PWD/filters/valuefilter.cpp \
     $$PWD/filters/indexfilter.cpp \
-    $$PWD/filters/regexpfilter.cpp \
+    
     $$PWD/filters/rangefilter.cpp \
     $$PWD/filters/expressionfilter.cpp \
     $$PWD/filters/filtercontainerfilter.cpp \
@@ -58,3 +58,12 @@ SOURCES += $$PWD/qqmlsortfilterproxymodel.cpp \
     $$PWD/proxyroles/regexprole.cpp \
     $$PWD/sorters/filtersorter.cpp \
     $$PWD/proxyroles/filterrole.cpp
+
+equals($$[QT_MAJOR_VERSION] 6) {
+    HEADERS += $$PWD/filters/regularexpressionfilter.h
+    SOURCES += $$PWD/filters/regularexpressionfilter.cpp
+}
+else {
+    HEADERS += $$PWD/filters/regexpfilter.h
+    SOURCES += $$PWD/filters/regexpfilter.cpp
+}
